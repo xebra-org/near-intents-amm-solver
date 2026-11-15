@@ -137,7 +137,7 @@ export class RebalanceService {
       this.logger.info('Dry run: would rebalance now.');
       return;
     }
-    await this.execute({ ...req, maxTotalFee: est.fees.cctp }, est.fromAsset, plan.amount);
+    await this.execute({ ...req, maxTotalFee: cfg.maxFee }, est.fromAsset, plan.amount);
   }
 
   private async execute(req: RebalanceRequest, fromAsset: string, units: bigint): Promise<void> {
