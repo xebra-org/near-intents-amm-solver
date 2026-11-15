@@ -1,5 +1,5 @@
 # Stage 1: Development with Dependencies
-FROM node:20-slim AS dev
+FROM node:22-slim AS dev
 
 # Install Python and build-essential for node-gyp dependencies
 RUN apt-get update && \
@@ -14,7 +14,7 @@ COPY package*.json ./
 RUN npm ci
 
 # Stage 2: Runtime Lightweight Image
-FROM node:20-slim AS runtime
+FROM node:22-slim AS runtime
 
 WORKDIR /app
 ENV NODE_ENV=production

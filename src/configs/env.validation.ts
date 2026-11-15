@@ -46,4 +46,33 @@ export const envVariablesValidationSchema = Joi.object({
     then: Joi.number().positive().required(),
     otherwise: Joi.number().positive().default(0.3),
   }),
+  // optional: cross-chain USDC rebalancing through Xebra (see README)
+  REBALANCE_ENABLED: Joi.boolean().default(false),
+  REBALANCE_DRY_RUN: Joi.boolean().default(true),
+  REBALANCE_TOKEN1_CHAIN: Joi.alternatives().conditional('REBALANCE_ENABLED', {
+    is: true,
+    then: Joi.string().required(),
+    otherwise: Joi.string().allow('', null),
+  }),
+  REBALANCE_TOKEN2_CHAIN: Joi.alternatives().conditional('REBALANCE_ENABLED', {
+    is: true,
+    then: Joi.string().required(),
+    otherwise: Joi.string().allow('', null),
+  }),
+  REBALANCE_MIN_SHARE: Joi.number().greater(0).less(0.5).default(0.25),
+  REBALANCE_TARGET_SHARE: Joi.number().greater(0).max(0.5).default(0.5),
+  REBALANCE_MIN_AMOUNT: Joi.string()
+    .pattern(/^\d+(\.\d+)?$/)
+    .default('100'),
+  REBALANCE_MAX_FEE: Joi.string()
+    .pattern(/^\d+(\.\d+)?$/)
+    .default('5'),
+  REBALANCE_SPEED: Joi.string().valid('standard', 'fast').default('standard'),
+  REBALANCE_INTERVAL_SEC: Joi.number().integer().min(30).default(300),
+  REBALANCE_EVM_PRIVATE_KEY: Joi.string()
+    .pattern(/^0x[0-9a-fA-F]{64}$/)
+    .allow('', null),
+  REBALANCE_RPC_URLS: Joi.string().allow('', null),
+  ONECLICK_API_KEY: Joi.string().allow('', null),
+  XEBRA_API_URL: Joi.string().uri().allow('', null),
 }).unknown();

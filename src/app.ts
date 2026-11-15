@@ -6,6 +6,8 @@ import { QuoterService } from './services/quoter.service';
 import { HttpService } from './services/http.service';
 import { WebsocketConnectionService } from './services/websocket-connection.service';
 import { WorkerService } from './services/worker.service';
+import { RebalanceService } from './services/rebalance.service';
+import { rebalanceConfig } from './configs/rebalance.config';
 import { teeEnabled } from 'src/configs/tee.config';
 
 export async function app() {
@@ -27,6 +29,12 @@ export async function app() {
 
   const cronService = new CronService(quoterService);
   cronService.start();
+
+  if (rebalanceConfig.enabled) {
+    const rebalanceService = new RebalanceService(nearService, intentsService, quoterService);
+    await rebalanceService.init();
+    rebalanceService.start();
+  }
 
   const websocketService = new WebsocketConnectionService(quoterService, cacheService);
   websocketService.start();
